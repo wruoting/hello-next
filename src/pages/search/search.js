@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components'
 import Input from '@material-ui/core/Input';
 import Item from '../../components/Item';
-import { getRecipes } from '../../redux/API/search';
+import { getRecipes, getRecipeByIDs } from '../../redux/API/search';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,6 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 
 const ClickWrapper = styled.div``;
 
@@ -58,6 +59,16 @@ const Search = ({
         setSelectedListState(newArray);
     }
 
+    const compileIngredientsCallback = useCallback(() => {
+        const ids = selectedListState.map((item) => {
+            return item.recipeId;
+        })
+        getRecipeByIDs(ids, 2)
+        .then((ingredients) => {
+            console.log(ingredients);
+        })
+    }, []);
+
     return (
         <>
         <Input
@@ -98,6 +109,18 @@ const Search = ({
             <></>
         }
         </List>
+        <Button
+            variant="contained"
+            onClick={compileIngredientsCallback}
+        >
+            Compile Ingredients
+        </Button>
+        <Button
+            variant="contained"
+        >
+            Clear All
+        </Button>
+
         </>
     );
 }
